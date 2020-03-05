@@ -30,7 +30,7 @@ struct Comparer {
 };
 
 int main() {
-    ifstream in("/Users/irusland/Desktop/UrFU/C++/task1/test.txt");
+    ifstream in("/Users/irusland/Desktop/UrFU/C++/task1/book.txt");
 
     if (!in) {
         cout << "Cannot open input file" << std::endl;
@@ -59,16 +59,31 @@ int main() {
     auto start = chrono::steady_clock::now();
 
 //    todo tokenizing the book here
-    size_t wordlen = 0;                  // initial room for string
-    char x;
+    set<char> stopchars;
+    stopchars.insert(' ');
+    stopchars.insert(',');
+    stopchars.insert('.');
+    stopchars.insert('-');
+    stopchars.insert('_');
+    stopchars.insert('\'');
+    stopchars.insert('\"');
+    stopchars.insert('\n');
+    stopchars.insert('\0');
+
+
+    size_t wordlen = 0;
+    char c;
     char *word = (char*)malloc(wordlen);
     for (int i = 0; i <= size; ++i) {
-        x = Text[i];
-        cout << x << endl;
-        if (x == ' ' | x == '\0') {
+        c = (char)tolower((int)Text[i]);
+//        cout << c << endl;
+        if (stopchars.find(c) != stopchars.end()) {
+            if (wordlen == 0) {
+                continue;
+            }
             auto it = s.find(word);
             if (it == s.end()) {
-                cout << "insert: '" << word << "' count = " << 1 << endl;
+//                cout << "insert: '" << word << "' count = " << 1 << endl;
                 s.insert(Pair(word, 1));
             } else {
                 it->count++;
@@ -80,7 +95,7 @@ int main() {
         else {
             wordlen++;
             word = (char*)realloc(word, wordlen);
-            word[wordlen - 1] = x;
+            word[wordlen - 1] = c;
         }
     }
 
